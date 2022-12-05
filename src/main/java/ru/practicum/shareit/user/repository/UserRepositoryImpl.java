@@ -13,7 +13,7 @@ import ru.practicum.shareit.user.mapper.MapRowToUserDto;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.practicum.shareit.sql.SqlRequests.*;
+import static ru.practicum.shareit.user.sql.UserSqlRequest.*;
 
 @Repository
 @RequiredArgsConstructor

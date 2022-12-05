@@ -1,6 +1,6 @@
-package ru.practicum.shareit.sql;
+package ru.practicum.shareit.user.sql;
 
-public interface SqlRequests {
+public interface UserSqlRequest {
     String SQL_GET_USER_BY_ID = String.format("SELECT * FROM %s WHERE id = ?", Tables.USERS);
     String SQL_GET_USER_BY_EMAIL = String.format("SELECT * FROM %s WHERE EMAIL LIKE ?", Tables.USERS);
     String SQL_GET_COUNT_OF_USERS_WITH_SAME_EMAIL = String.format("SELECT COUNT(*) FROM %s WHERE EMAIL LIKE ?", Tables.USERS);
