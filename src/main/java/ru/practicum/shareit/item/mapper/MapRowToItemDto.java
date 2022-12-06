@@ -17,8 +17,8 @@ public class MapRowToItemDto implements RowMapper<ItemDto> {
         return ItemDto.builder()
                 .id(rs.getInt("id"))
                 .name(rs.getString("name"))
-//                .request(rs.getInt("request"))
-//                .owner()
+                .request(rs.getInt("request"))
+                .owner(rs.getInt("owner"))
                 .available(rs.getBoolean("available"))
                 .description(rs.getString("description"))
                 .build();

@@ -18,13 +18,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto addItem(ItemDto itemDto) {
-        return itemRepository.addItem(itemDto);
+    public ItemDto addItem(Integer ownerId, ItemDto itemDto) {
+        return itemRepository.addItem(ownerId, itemDto);
     }
 
     @Override
-    public ItemDto updateItem(ItemDto ItemDto) {
-        return null;
+    public ItemDto updateItem(Integer ownerId,ItemDto itemDto) {
+        return itemRepository.updateItem(ownerId, itemDto);
     }
 
     @Override
@@ -34,7 +34,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> allItems() {
-        return null;
+        return itemRepository.allItems();
+    }
+
+    @Override
+    public List<ItemDto> allOwnerItems(int ownerId) {
+        return itemRepository.allOwnerItems(ownerId);
     }
 
     @Override
