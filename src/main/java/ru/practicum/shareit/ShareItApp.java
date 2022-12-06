@@ -11,25 +11,25 @@ import org.springframework.web.servlet.DispatcherServlet;
 @SpringBootApplication
 public class ShareItApp {
 
-	private static final Integer PORT = 8080;
+    private static final Integer PORT = 8080;
 
-	public static void main(String[] args) throws LifecycleException {
-		Tomcat tomcat = new Tomcat();
-		tomcat.getConnector().setPort(PORT);
+    public static void main(String[] args) throws LifecycleException {
+        Tomcat tomcat = new Tomcat();
+        tomcat.getConnector().setPort(PORT);
 
-		Context tomcatContext = tomcat.addContext("", null);
+        Context tomcatContext = tomcat.addContext("", null);
 
-		AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
-		applicationContext.scan("ru.practicum");
-		applicationContext.setServletContext(tomcatContext.getServletContext());
-		applicationContext.refresh();
+        AnnotationConfigWebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
+        applicationContext.scan("ru.practicum");
+        applicationContext.setServletContext(tomcatContext.getServletContext());
+        applicationContext.refresh();
 
-		DispatcherServlet dispatcherServlet = new DispatcherServlet(applicationContext);
-		Wrapper dispatcherWrapper = Tomcat.addServlet(tomcatContext, "dispatcher", dispatcherServlet);
-		dispatcherWrapper.addMapping("/");
-		dispatcherWrapper.setLoadOnStartup(1);
+        DispatcherServlet dispatcherServlet = new DispatcherServlet(applicationContext);
+        Wrapper dispatcherWrapper = Tomcat.addServlet(tomcatContext, "dispatcher", dispatcherServlet);
+        dispatcherWrapper.addMapping("/");
+        dispatcherWrapper.setLoadOnStartup(1);
 
-		tomcat.start();
-	}
+        tomcat.start();
+    }
 
 }

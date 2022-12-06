@@ -8,10 +8,10 @@ import java.util.Optional;
 public class ValidateItem {
     public static ItemDto validateParamOnNull(Optional<ItemDto> itemDtoOptional) {
 
-        if(itemDtoOptional.isPresent()) {
+        if (itemDtoOptional.isPresent()) {
             ItemDto validateItemDto = itemDtoOptional.get();
 
-            if(validateItemDto.getAvailable() == null || validateItemDto.getName() == null || validateItemDto.getDescription() == null) {
+            if (validateItemDto.getAvailable() == null || validateItemDto.getName() == null || validateItemDto.getDescription() == null) {
                 throw new IncorrectParamInRequestException("Не указан один из параметров Item");
             }
 
@@ -23,10 +23,10 @@ public class ValidateItem {
 
     public static ItemDto validateOnEmptyName(Optional<ItemDto> itemDtoOptional) {
 
-        if(itemDtoOptional.isPresent()) {
+        if (itemDtoOptional.isPresent()) {
             ItemDto validateItemDto = itemDtoOptional.get();
 
-            if(validateItemDto.getName().isEmpty()) {
+            if (validateItemDto.getName().isEmpty()) {
                 throw new IncorrectParamInRequestException("Имя Item указано неверно!");
             }
 

@@ -23,7 +23,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(Integer ownerId,ItemDto itemDto) {
+    public ItemDto updateItem(Integer ownerId, ItemDto itemDto) {
         return itemRepository.updateItem(ownerId, itemDto);
     }
 
