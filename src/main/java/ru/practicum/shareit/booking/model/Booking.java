@@ -12,26 +12,12 @@ import java.time.LocalDate;
 
 @Data
 public class Booking {
-    Integer id;
-    // дата и время начала бронирования
-    LocalDate start;
-    // дата и время конца бронирования
-    LocalDate end;
-    // вещь, которую пользователь бронирует
-    Item item;
-    // пользователь, который осуществляет бронирование
-    User booker;
-    /*
-    статус бронирования.
-
-    Может принимать одно из следующих
-    значений:
-    WAITING — новое бронирование, ожидает одобрения,
-    APPROVED — бронирование подтверждено владельцем,
-    REJECTED — бронирование отклонено владельцем,
-    CANCELED — бронирование отменено создателем.
-    */
-    Status status;
+    private Integer id;
+    private LocalDate bookingStartTime;
+    private LocalDate bookingEndTime;
+    private Item item;
+    private User booker;
+    private BookingStatus.Status bookingStatus;
 }
 
 

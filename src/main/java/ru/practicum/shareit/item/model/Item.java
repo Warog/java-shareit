@@ -10,16 +10,10 @@ import lombok.Data;
 @Data
 @Builder
 public class Item {
-    Integer id;
-    // краткое название
-    String name;
-    // развёрнутое описание
-    String description;
-    // статус о том, доступна или нет вещь для аренды
-    Boolean available;
-    // владелец вещи
-    Integer owner;
-    // если вещь была создана по запросу другого пользователя, то в этом
-    //поле будет храниться ссылка на соответствующий запрос
-    Integer request;
+    private Integer id;
+    private String name;
+    private String description;
+    private Boolean available;
+    private Integer owner;
+    private Integer itemRequest;
 }

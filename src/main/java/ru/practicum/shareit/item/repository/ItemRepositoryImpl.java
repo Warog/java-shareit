@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.IncorrectParamInRequestException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.UserNotOwnerException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -27,7 +27,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         return jdbcTemplate.queryForObject(SQL_GET_ITEM_BY_ID, new MapRowToItemDto(), id);
     }
 
-    @Transactional
     @Override
     public ItemDto addItem(Integer ownerId, ItemDto itemDto) {
 
@@ -37,24 +36,26 @@ public class ItemRepositoryImpl implements ItemRepository {
             throw new UserNotFoundException(String.format("Владелец с ID = %d не найден!", ownerId), e.getCause());
         }
 
-        ValidateItem.validateParamOnNull(Optional.of(itemDto));
-        ValidateItem.validateOnEmptyName(Optional.of(itemDto));
+        ValidateItem.validateParamOnNull(itemDto);
+        ValidateItem.validateOnEmptyName(itemDto);
 
-        jdbcTemplate.update(SQL_ADD_ITEM, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getOwner(), itemDto.getRequest());
+        jdbcTemplate.update(SQL_ADD_ITEM, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getOwner(), itemDto.getItemRequest());
 
         return jdbcTemplate.queryForObject(SQL_GET_ITEM_BY_ALL_PARAMETERS, new MapRowToItemDto(), itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable());
     }
 
-    @Transactional
     @Override
     public ItemDto updateItem(Integer ownerId, ItemDto itemDto) {
 
-        Integer isOwner = jdbcTemplate.queryForObject(SQL_GET_OWNER_ITEM, Integer.class, ownerId, itemDto.getId());
+        Optional<Integer> isOwnerOptional = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_OWNER_ITEM, Integer.class, ownerId, itemDto.getId()));
 
-        if (isOwner == 1) {
-            jdbcTemplate.update(SQL_UPDATE_ITEM_BY_ID, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getId());
+        if (isOwnerOptional.isPresent()) {
+            if (isOwnerOptional.get() > 0)
+                jdbcTemplate.update(SQL_UPDATE_ITEM_BY_ID, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getId());
+            else
+                throw new UserNotOwnerException("Пользователь не является владельцем!");
         } else {
-            throw new UserNotOwnerException("Пользователь не является владельцем!");
+            throw new IncorrectParamInRequestException("Указан не существующий параметр");
         }
 
         return getItem(itemDto.getId());

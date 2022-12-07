@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.UserDuplicateEmailException;
 import ru.practicum.shareit.exception.UserEmailEmptyException;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -26,7 +25,6 @@ public class UserRepositoryImpl implements UserRepository {
         return jdbcTemplate.queryForObject(SQL_GET_USER_BY_ID, new MapRowToUserDto(), id);
     }
 
-    @Transactional
     @Override
     public UserDto addUser(UserDto userDto) {
         try {
@@ -34,11 +32,13 @@ public class UserRepositoryImpl implements UserRepository {
             if (Optional.ofNullable(userDto.getEmail()).isEmpty())
                 throw new UserEmailEmptyException("Не указан E-Mail");
 
-            Integer sameEmailCount = jdbcTemplate.queryForObject(SQL_GET_COUNT_OF_USERS_WITH_SAME_EMAIL, Integer.class, userDto.getEmail());
+            Optional<Integer> sameEmailCountOptional = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_COUNT_OF_USERS_WITH_SAME_EMAIL, Integer.class, userDto.getEmail()));
+            sameEmailCountOptional.ifPresent(sameEmailCount -> {
+                if (sameEmailCount != 0) {
+                    throw new UserDuplicateEmailException("Данный E-Mail уже существует!");
+                }
+            });
 
-            if (sameEmailCount != 0) {
-                throw new UserDuplicateEmailException("Данный E-Mail уже существует!");
-            }
 
             jdbcTemplate.update(SQL_ADD_USER, userDto.getName(), userDto.getEmail());
 
@@ -49,15 +49,16 @@ public class UserRepositoryImpl implements UserRepository {
         return jdbcTemplate.queryForObject(SQL_GET_USER_BY_EMAIL, new MapRowToUserDto(), userDto.getEmail());
     }
 
-    @Transactional
     @Override
     public UserDto updateUser(UserDto userDto) {
 
-        Integer sameEmailCount = jdbcTemplate.queryForObject(SQL_GET_COUNT_OF_USERS_WITH_SAME_EMAIL, Integer.class, userDto.getEmail());
+        Optional<Integer> sameEmailCountOptional = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_COUNT_OF_USERS_WITH_SAME_EMAIL, Integer.class, userDto.getEmail()));
 
-        if (sameEmailCount > 0) {
-            throw new UserDuplicateEmailException("Данный E-Mail уже существует!");
-        }
+        sameEmailCountOptional.ifPresent(sameEmailCount -> {
+            if (sameEmailCount > 0) {
+                throw new UserDuplicateEmailException("Данный E-Mail уже существует!");
+            }
+        });
 
         jdbcTemplate.update(SQL_UPDATE_USER_BY_ID, userDto.getName(), userDto.getEmail(), userDto.getId());
 

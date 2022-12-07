@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
-    Integer id;
-    String name;
-    String description;
-    Boolean available;
-    Integer owner;
-    Integer request;
+    private Integer id;
+    private String name;
+    private String description;
+    private Boolean available;
+    private Integer owner;
+    private Integer itemRequest;
 }
