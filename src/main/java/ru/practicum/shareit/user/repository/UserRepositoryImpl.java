@@ -75,9 +75,4 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcTemplate.update(SQL_DELETE_USER_BY_ID, id);
     }
 
-    @Override
-    public void deleteAllUsers() {
-
-    }
-
 }

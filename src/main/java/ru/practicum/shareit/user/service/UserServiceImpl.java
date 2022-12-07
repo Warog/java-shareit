@@ -43,9 +43,4 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteUser(id);
     }
 
-    @Transactional
-    @Override
-    public void deleteAllUsers() {
-
-    }
 }
