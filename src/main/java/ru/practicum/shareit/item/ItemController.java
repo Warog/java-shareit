@@ -3,6 +3,7 @@ package ru.practicum.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
@@ -51,14 +52,14 @@ public class ItemController {
 
 
     @GetMapping("/search")
-    public List<ItemDto> searchItem(@RequestParam String text) {
+    public List<Item> searchItem(@RequestParam String text) {
         log.info("Найти предмет по описанию: {}", text);
 
         return itemService.searchItem(text);
     }
 
     @GetMapping
-    public List<ItemDto> getAllOwnersItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
+    public List<Item> getAllOwnersItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
         log.info("Получить список предметов владельца с ID = {}", ownerId);
 
         return itemService.allOwnerItems(ownerId);

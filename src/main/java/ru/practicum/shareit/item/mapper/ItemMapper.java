@@ -5,7 +5,7 @@ import ru.practicum.shareit.item.model.Item;
 
 public class ItemMapper {
 
-    public static ItemDto toItemDro(Item item) {
+    public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())

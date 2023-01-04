@@ -9,18 +9,103 @@ import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.UserNotOwnerException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.MapRowToItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.validate.ValidateItem;
+import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
 
 import static ru.practicum.shareit.item.sql.ItemSqlRequest.*;
 
 @Repository
-@RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final EntityManager entityManager;
 
+    public ItemRepositoryImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    public Item getItem(int id) {
+        return entityManager.find(Item.class, id);
+    }
+
+    @Override
+    public Item addItem(Integer ownerId, Item item) {
+        item.setOwner(ownerId); // Нужна проверка на наличие
+        entityManager.persist(item);
+
+        return item;
+    }
+
+    @Override
+    public Item updateItem(Integer ownerId, ItemDto itemDto) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<Item> cu = cb.createCriteriaUpdate(Item.class);
+        Root<Item> root = cu.from(Item.class);
+        cu.set("name", itemDto.getName());
+        cu.set("description", itemDto.getDescription());
+        cu.set("available", itemDto.getAvailable());
+        cu.where(cb.equal(root.get("id"), itemDto.getId()));
+
+        entityManager.createQuery(cu).executeUpdate();
+
+        return getItem(itemDto.getId());
+    }
+
+    @Override
+    public List<Item> searchItem(String description) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Item> cq = cb.createQuery(Item.class);
+        Root<Item> root = cq.from(Item.class);
+        cq.select(root).where(cb.like(cb.lower(root.get("description")), "%" + description.toLowerCase() + "%"));
+
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<Item> allItems() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Item> cr = cb.createQuery(Item.class);
+        Root<Item> root = cr.from(Item.class);
+        cr.select(root);
+
+        return entityManager.createQuery(cr).getResultList();
+    }
+
+    @Override
+    public List<Item> allOwnerItems(int ownerId) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Item> cr = cb.createQuery(Item.class);
+        Root<Item> root = cr.from(Item.class);
+        cr.select(root).where(cb.equal(root.get("owner"), ownerId));
+
+        return entityManager.createQuery(cr).getResultList();
+    }
+
+    @Override
+    public void deleteItem(int id) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Item> cd = cb.createCriteriaDelete(Item.class);
+        Root<Item> root = cd.from(Item.class);
+        cd.where(cb.equal(root.get("id"), id));
+
+        entityManager.createQuery(cd).executeUpdate();
+    }
+
+    @Override
+    public void deleteAllItems() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Item> cd = cb.createCriteriaDelete(Item.class);
+        cd.from(Item.class);
+
+        entityManager.createQuery(cd).executeUpdate();
+    }
+
+    /*
     @Override
     public ItemDto getItem(int id) {
 
@@ -89,5 +174,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     public void deleteAllItems() {
 
     }
+    */
 
 }

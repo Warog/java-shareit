@@ -22,6 +22,7 @@ public class Item {
     private String description;
     private Boolean available;
     private Integer owner;
+    @Column(name = "REQUEST")
     private Integer itemRequest;
 
     @Override

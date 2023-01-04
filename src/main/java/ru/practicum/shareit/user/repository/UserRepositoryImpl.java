@@ -50,9 +50,8 @@ public class UserRepositoryImpl implements UserRepository {
         CriteriaQuery<User> cr = cb.createQuery(User.class);
         Root<User> root = cr.from(User.class);
         cr.select(root);
-        List<User> allUsers = entityManager.createQuery(cr).getResultList();
 
-        return allUsers;
+        return entityManager.createQuery(cr).getResultList();
     }
 
     @Override
