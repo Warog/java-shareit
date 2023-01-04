@@ -1,6 +1,6 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -12,10 +12,14 @@ import javax.validation.constraints.NotBlank;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 //    @Column(nullable = false, length = 64)
     private String name;
@@ -23,6 +27,7 @@ public class User {
     @NotBlank(message = "Неверные данные: Email пуст или содержит только пробелы")
     private String email;
     @Enumerated(EnumType.STRING)
+    @Transient
     private UserState state;
 
     public enum UserState {
