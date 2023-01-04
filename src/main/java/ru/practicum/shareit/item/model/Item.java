@@ -1,6 +1,9 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -22,7 +25,7 @@ public class Item {
     private String description;
     private Boolean available;
     private Integer owner;
-    @Column(name = "REQUEST")
+    @Column(name = "request")
     private Integer itemRequest;
 
     @Override

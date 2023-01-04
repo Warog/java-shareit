@@ -1,14 +1,10 @@
 package ru.practicum.shareit.item.repository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.exception.IncorrectParamInRequestException;
+import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.exception.UserNotOwnerException;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.mapper.MapRowToItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.validate.ValidateItem;
 import ru.practicum.shareit.user.model.User;
@@ -16,9 +12,6 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.util.List;
-import java.util.Optional;
-
-import static ru.practicum.shareit.item.sql.ItemSqlRequest.*;
 
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
@@ -30,38 +23,63 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item getItem(int id) {
-        return entityManager.find(Item.class, id);
+        Item item = entityManager.find(Item.class, id);
+        if (item == null)
+            throw new ItemNotFoundException("Объект не найден!");
+
+        return item;
+
     }
 
     @Override
     public Item addItem(Integer ownerId, Item item) {
-        item.setOwner(ownerId); // Нужна проверка на наличие
+        User user = entityManager.find(User.class, ownerId);
+        if (user == null)
+            throw new UserNotFoundException("Владельца с указанным Id не существует!");
+
+        item.setOwner(ownerId);
+
+        ValidateItem.validateParamOnNull(item);
+        ValidateItem.validateOnEmptyName(item);
+
         entityManager.persist(item);
 
-        return item;
+        return getItem(item.getId());
     }
 
     @Override
     public Item updateItem(Integer ownerId, ItemDto itemDto) {
+        if (!getItem(itemDto.getId()).getOwner().equals(ownerId))
+            throw new UserNotOwnerException("Пользователь не является владельцем!");
+
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaUpdate<Item> cu = cb.createCriteriaUpdate(Item.class);
         Root<Item> root = cu.from(Item.class);
-        cu.set("name", itemDto.getName());
-        cu.set("description", itemDto.getDescription());
-        cu.set("available", itemDto.getAvailable());
+
+        if (itemDto.getName() != null)
+            cu.set("name", itemDto.getName());
+        if (itemDto.getDescription() != null)
+            cu.set("description", itemDto.getDescription());
+        if (itemDto.getAvailable() != null)
+            cu.set("available", itemDto.getAvailable());
+
         cu.where(cb.equal(root.get("id"), itemDto.getId()));
 
         entityManager.createQuery(cu).executeUpdate();
+        entityManager.clear();
 
         return getItem(itemDto.getId());
     }
 
     @Override
     public List<Item> searchItem(String description) {
+        if (description.isBlank())
+            return List.of();
+
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Item> cq = cb.createQuery(Item.class);
         Root<Item> root = cq.from(Item.class);
-        cq.select(root).where(cb.like(cb.lower(root.get("description")), "%" + description.toLowerCase() + "%"));
+        cq.select(root).where(cb.like(cb.lower(root.get("description")), "%" + description.toLowerCase() + "%"), cb.equal(root.get("available"), true));
 
         return entityManager.createQuery(cq).getResultList();
     }

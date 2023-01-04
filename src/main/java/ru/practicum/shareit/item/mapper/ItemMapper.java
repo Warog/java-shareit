@@ -6,7 +6,8 @@ import ru.practicum.shareit.item.model.Item;
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
-        return ItemDto.builder()
+        if (item != null)
+            return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
@@ -14,10 +15,13 @@ public class ItemMapper {
                 .owner(item.getOwner())
                 .itemRequest(item.getItemRequest())
                 .build();
+
+        return new ItemDto();
     }
 
     public static Item toItem(ItemDto itemDto) {
-        return Item.builder()
+        if (itemDto != null)
+            return Item.builder()
                 .id(itemDto.getId())
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
@@ -25,5 +29,7 @@ public class ItemMapper {
                 .owner(itemDto.getOwner())
                 .itemRequest(itemDto.getItemRequest())
                 .build();
+
+        return new Item();
     }
 }
