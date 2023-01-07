@@ -9,12 +9,11 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ItemDto {
+public class OwnerItemDto {
     private Integer id;
     private String name;
     private String description;
     private Boolean available;
-    private Integer owner;
     private ItemBookingDto lastBooking;
     private ItemBookingDto nextBooking;
 }

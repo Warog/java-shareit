@@ -1,23 +1,50 @@
 package ru.practicum.shareit.booking.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * TODO Sprint add-bookings.
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "booking")
 public class Booking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDate bookingStartTime;
-    private LocalDate bookingEndTime;
-    private Item item;
-    private User booker;
-    private BookingStatus.Status bookingStatus;
+    @Column(name = "START_DATE")
+    private LocalDateTime start;
+    @Column(name = "END_DATE")
+    private LocalDateTime end;
+    @Column(name = "ITEM_ID")
+    private Integer itemId;
+    @Column(name = "BOOKER_ID")
+    private Integer bookerId;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus.Status status;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Booking)) return false;
+        return id != null && id.equals(((Booking) o).getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }
 
 

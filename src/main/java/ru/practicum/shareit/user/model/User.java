@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -26,11 +28,4 @@ public class User {
     @Email(message = "Неверно указан email")
     @NotBlank(message = "Неверные данные: Email пуст или содержит только пробелы")
     private String email;
-    @Enumerated(EnumType.STRING)
-    @Transient
-    private UserState state;
-
-    public enum UserState {
-        ACTIVE, BLOCKED, DELETED;
-    }
 }

@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemService {
-    ItemDto getItem(int id);
+    ItemDto getItem(int id, Integer userId);
 
     ItemDto addItem(Integer ownerId, ItemDto itemDto);
 
@@ -16,7 +16,7 @@ public interface ItemService {
 
     List<Item> allItems();
 
-    List<Item> allOwnerItems(int ownerId);
+    List<ItemDto> allOwnerItems(int ownerId);
 
     void deleteItem(int id);
 

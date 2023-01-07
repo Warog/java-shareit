@@ -24,16 +24,16 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItem(@PathVariable int id) {
+    public ItemDto getItem(@PathVariable int id, @RequestHeader("X-Sharer-User-Id") Integer userId) {
         log.info("Получить предмет с ID = {}", id);
 
-        return itemService.getItem(id);
+        return itemService.getItem(id, userId);
     }
 
     @PostMapping
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") Integer ownerId, @RequestBody ItemDto itemDto) {
 
-        itemDto.setOwner(ownerId);
+//        itemDto.setOwner(ownerId);
 
         log.info("Создать предмет с данными: {}", itemDto);
 
@@ -44,7 +44,7 @@ public class ItemController {
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") int ownerId, @PathVariable int itemId, @RequestBody ItemDto itemDto) {
         log.info("Изменить данные предмета с ID = {}. \n OWNER_ID = {}. \n Новые данные предмета: {}", itemId, ownerId, itemDto);
 
-        itemDto.setOwner(ownerId);
+//        itemDto.setOwner(ownerId);
         itemDto.setId(itemId);
 
         return itemService.updateItem(ownerId, itemDto);
@@ -59,7 +59,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<Item> getAllOwnersItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
+    public List<ItemDto> getAllOwnersItems(@RequestHeader("X-Sharer-User-Id") int ownerId) {
         log.info("Получить список предметов владельца с ID = {}", ownerId);
 
         return itemService.allOwnerItems(ownerId);

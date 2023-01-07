@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.mapper;
 
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
@@ -8,28 +9,41 @@ public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
         if (item != null)
             return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .owner(item.getOwner())
-                .itemRequest(item.getItemRequest())
-                .build();
+                    .id(item.getId())
+                    .name(item.getName())
+                    .description(item.getDescription())
+                    .available(item.getAvailable())
+                    .owner(item.getOwner())
+                    .build();
 
-        return new ItemDto();
+        return ItemDto.builder().build();
     }
 
     public static Item toItem(ItemDto itemDto) {
         if (itemDto != null)
             return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .owner(itemDto.getOwner())
-                .itemRequest(itemDto.getItemRequest())
-                .build();
+                    .id(itemDto.getId())
+                    .name(itemDto.getName())
+                    .description(itemDto.getDescription())
+                    .available(itemDto.getAvailable())
+                    .owner(itemDto.getOwner())
+                    .build();
 
-        return new Item();
+        return Item.builder().build();
+    }
+
+    public static ItemDto toItemDtoWithBookings(Item item, ItemBookingDto lastBooking, ItemBookingDto nextBooking) {
+        if (item != null)
+            return ItemDto.builder()
+                    .id(item.getId())
+                    .name(item.getName())
+                    .description(item.getDescription())
+                    .available(item.getAvailable())
+                    .owner(item.getOwner())
+                    .lastBooking(lastBooking)
+                    .nextBooking(nextBooking)
+                    .build();
+
+        return ItemDto.builder().build();
     }
 }

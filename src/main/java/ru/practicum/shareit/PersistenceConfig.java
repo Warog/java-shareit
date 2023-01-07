@@ -31,10 +31,10 @@ public class PersistenceConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:file:./db/shareit");
-        dataSource.setUsername("test");
-        dataSource.setPassword("test");
+        dataSource.setDriverClassName(environment.getRequiredProperty("spring.datasource.driverClassName"));
+        dataSource.setUrl(environment.getRequiredProperty("spring.datasource.url"));
+        dataSource.setUsername(environment.getRequiredProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getRequiredProperty("spring.datasource.password"));
 
         return dataSource;
     }

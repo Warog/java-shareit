@@ -28,7 +28,6 @@ public class ItemRepositoryImpl implements ItemRepository {
             throw new ItemNotFoundException("Объект не найден!");
 
         return item;
-
     }
 
     @Override
@@ -122,76 +121,5 @@ public class ItemRepositoryImpl implements ItemRepository {
 
         entityManager.createQuery(cd).executeUpdate();
     }
-
-    /*
-    @Override
-    public ItemDto getItem(int id) {
-
-        return jdbcTemplate.queryForObject(SQL_GET_ITEM_BY_ID, new MapRowToItemDto(), id);
-    }
-
-    @Override
-    public ItemDto addItem(Integer ownerId, ItemDto itemDto) {
-
-        try {
-            jdbcTemplate.queryForObject(SQL_FOUND_USER, Integer.class, ownerId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new UserNotFoundException(String.format("Владелец с ID = %d не найден!", ownerId), e.getCause());
-        }
-
-        ValidateItem.validateParamOnNull(itemDto);
-        ValidateItem.validateOnEmptyName(itemDto);
-
-        jdbcTemplate.update(SQL_ADD_ITEM, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getOwner(), itemDto.getItemRequest());
-
-        return jdbcTemplate.queryForObject(SQL_GET_ITEM_BY_ALL_PARAMETERS, new MapRowToItemDto(), itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable());
-    }
-
-    @Override
-    public ItemDto updateItem(Integer ownerId, ItemDto itemDto) {
-
-        Optional<Integer> isOwnerOptional = Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_OWNER_ITEM, Integer.class, ownerId, itemDto.getId()));
-
-        if (isOwnerOptional.isPresent()) {
-            if (isOwnerOptional.get() > 0)
-                jdbcTemplate.update(SQL_UPDATE_ITEM_BY_ID, itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getId());
-            else
-                throw new UserNotOwnerException("Пользователь не является владельцем!");
-        } else {
-            throw new IncorrectParamInRequestException("Указан не существующий параметр");
-        }
-
-        return getItem(itemDto.getId());
-    }
-
-    @Override
-    public List<ItemDto> searchItem(String description) {
-        if (description.isBlank()) return List.of();
-
-        description = "%" + description.toLowerCase() + "%";
-
-        return jdbcTemplate.query(SQL_SEARCH_ITEM_BY_DESCRIPTION, new MapRowToItemDto(), description);
-    }
-
-    @Override
-    public List<ItemDto> allItems() {
-        return jdbcTemplate.query(SQL_GET_ALL_ITEMS, new MapRowToItemDto());
-    }
-
-    @Override
-    public List<ItemDto> allOwnerItems(int ownerId) {
-        return jdbcTemplate.query(SQL_GET_ALL_OWNER_ITEMS_BY_OWNER_ID, new MapRowToItemDto(), ownerId);
-    }
-
-    @Override
-    public void deleteItem(int id) {
-        jdbcTemplate.update(SQL_DELETE_ITEM_BY_ID, id);
-    }
-
-    @Override
-    public void deleteAllItems() {
-
-    }
-    */
 
 }
