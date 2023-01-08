@@ -66,14 +66,14 @@ public class BookingServiceImpl implements BookingService {
         )
             throw new IncorrectParamInRequestException("Даты начала и завершения указаны неверно!");
         if (booking.getBookerId().equals(item.getOwner())) {
-                throw new UserNotFoundException("Невозможно создать запрос на аренду!");
+            throw new UserNotFoundException("Невозможно создать запрос на аренду!");
         }
 
         booking.setStatus(BookingStatus.Status.WAITING);
 
         return BookingMapper.toBookingDto(bookingRepository.save(booking), itemService.getItem(booking.getItemId(), null));
     }
-    
+
     @Transactional
     @Override
     public List<BookingDto> allBookings(int bookerId, String state) {
@@ -84,7 +84,6 @@ public class BookingServiceImpl implements BookingService {
 
         switch (state.toLowerCase()) {
             case "current":
-
                 return bookingRepository.findByBookerIdAndEndIsAfterAndStartIsBeforeOrderByStartDesc(bookerId, currentTime, currentTime)
                         .stream()
                         .map(booking -> BookingMapper.toBookingDto(booking, itemService.getItem(booking.getItemId(), null)))
