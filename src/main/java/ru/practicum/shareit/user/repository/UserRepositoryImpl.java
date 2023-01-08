@@ -50,7 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
         if (user.getName() != null)
             cu.set("name", user.getName());
 
-        if(user.getEmail() != null)
+        if (user.getEmail() != null)
             cu.set("email", user.getEmail());
 
         cu.where(cb.equal(root.get("id"), user.getId()));

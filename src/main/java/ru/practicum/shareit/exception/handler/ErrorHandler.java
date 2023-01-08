@@ -40,25 +40,25 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse ItemNotFoundException(final ItemNotFoundException e) {
+    public ErrorResponse itemNotFoundException(final ItemNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse ItemNotAvailableException(final ItemNotAvailableException e) {
+    public ErrorResponse itemNotAvailableException(final ItemNotAvailableException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse AccessDeniedException(final AccessDeniedException e) {
+    public ErrorResponse accessDeniedException(final AccessDeniedException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse CommentDeniedException(final CommentDeniedException e) {
+    public ErrorResponse commentDeniedException(final CommentDeniedException e) {
         return new ErrorResponse(e.getMessage());
     }
 
