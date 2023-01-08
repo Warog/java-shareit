@@ -5,12 +5,19 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.mapper.CommentMapper;
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.repository.CommentRepository;
+import ru.practicum.shareit.exception.CommentDeniedException;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -20,16 +27,21 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository, BookingRepository bookingRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, BookingRepository bookingRepository, CommentRepository commentRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.bookingRepository = bookingRepository;
+        this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     @Override
     public ItemDto getItem(int id, Integer userId) {
         Item item = itemRepository.getItem(id);
+        List<Comment> comments = commentRepository.findCommentsByItemId(id);
 
         Optional<ItemBookingDto> lastBooking = Optional.empty();
         Optional<ItemBookingDto> nextBooking = Optional.empty();
@@ -55,7 +67,15 @@ public class ItemServiceImpl implements ItemService {
                             .build());
         }
 
-        return ItemMapper.toItemDtoWithBookings(itemRepository.getItem(id), lastBooking.orElse(null), nextBooking.orElse(null));
+        List<CommentDto> commentDtos = comments.stream()
+                .map(comment -> CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getUser(comment.getAuthorId())))
+                .collect(Collectors.toList());
+
+        return ItemMapper.toItemDtoWithBookings(itemRepository.getItem(id),
+                lastBooking.orElse(null),
+                nextBooking.orElse(null),
+                commentDtos
+        );
     }
 
     @Transactional
@@ -78,12 +98,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public List<Item> allItems() {
-        return itemRepository.allItems();
-    }
-
-    @Transactional
-    @Override
     public List<ItemDto> allOwnerItems(int ownerId) {
         List<Item> items = itemRepository.allOwnerItems(ownerId);
 
@@ -93,13 +107,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public void deleteItem(int id) {
+    public CommentDto addComment(int authorId, int itemId, Comment comment) {
+        List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndStatusAndEndIsBefore(itemId, authorId, BookingStatus.Status.APPROVED, LocalDateTime.now());
 
-    }
+        if (bookings.size() == 0)
+            throw new CommentDeniedException("Комментарий отклонен!");
 
-    @Transactional
-    @Override
-    public void deleteAllItems() {
+        comment.setItemId(itemId);
+        comment.setAuthorId(authorId);
+        comment.setCreated(LocalDateTime.now());
 
+        return CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getUser(authorId));
     }
 }

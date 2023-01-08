@@ -25,8 +25,6 @@ public class Item {
     private String description;
     private Boolean available;
     private Integer owner;
-    @Column(name = "request")
-    private Integer itemRequest;
 
     @Override
     public boolean equals(Object o) {
