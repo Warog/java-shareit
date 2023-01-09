@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
@@ -30,11 +31,11 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        log.info("Создать пользователя с данными: {}", userDto);
+    public UserDto createUser(@Valid @RequestBody User user) {
+        log.info("Создать пользователя с данными: {}", user);
 
 
-        return userService.addUser(userDto);
+        return userService.addUser(user);
     }
 
     @PatchMapping("/{id}")
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public List<User> getAllUsers() {
         log.info("Вывод всех пользователей");
 
         return userService.allUsers();

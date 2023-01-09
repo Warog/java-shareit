@@ -1,9 +1,10 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 /**
@@ -16,27 +17,25 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "booking")
-public class Booking {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column(name = "START_DATE")
-    LocalDateTime start;
-    @Column(name = "END_DATE")
-    LocalDateTime end;
-    @Column(name = "ITEM_ID")
+    @NotBlank
+    String text;
+    @Column(name = "item_id")
     Integer itemId;
-    @Column(name = "BOOKER_ID")
-    Integer bookerId;
-    @Enumerated(EnumType.STRING)
-    BookingStatus.Status status;
+    @Column(name = "author_id")
+    Integer authorId;
+    @Column(name = "add_date")
+    LocalDateTime created;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Booking)) return false;
-        return id != null && id.equals(((Booking) o).getId());
+        if (!(o instanceof Comment)) return false;
+        return id != null && id.equals(((Comment) o).getId());
     }
 
     @Override
