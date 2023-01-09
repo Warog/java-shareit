@@ -1,9 +1,7 @@
 package ru.practicum.shareit.comment.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -17,20 +15,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Integer id;
     @NotBlank
-    private String text;
+    String text;
     @Column(name = "item_id")
-    private Integer itemId;
+    Integer itemId;
     @Column(name = "author_id")
-    private Integer authorId;
+    Integer authorId;
     @Column(name = "add_date")
-    private LocalDateTime created;
+    LocalDateTime created;
 
     @Override
     public boolean equals(Object o) {

@@ -1,9 +1,7 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 
@@ -11,10 +9,10 @@ import javax.validation.constraints.Email;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
     Integer id;
     String name;
     @Email(message = "Неверно указан email")
-//    @NotBlank(message = "Неверные данные: Email пуст или содержит только пробелы")
     String email;
 }

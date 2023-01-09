@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +26,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 public class BookingServiceImpl implements BookingService {
-    private final BookingRepository bookingRepository;
-    private final ItemService itemService;
-    private final UserService userService;
+    BookingRepository bookingRepository;
+    ItemService itemService;
+    UserService userService;
 
     public BookingServiceImpl(BookingRepository bookingRepository, ItemServiceImpl itemServiceImpl, UserServiceImpl userServiceImpl) {
         this.bookingRepository = bookingRepository;

@@ -1,9 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,22 +14,23 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "booking")
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Integer id;
     @Column(name = "START_DATE")
-    private LocalDateTime start;
+    LocalDateTime start;
     @Column(name = "END_DATE")
-    private LocalDateTime end;
+    LocalDateTime end;
     @Column(name = "ITEM_ID")
-    private Integer itemId;
+    Integer itemId;
     @Column(name = "BOOKER_ID")
-    private Integer bookerId;
+    Integer bookerId;
     @Enumerated(EnumType.STRING)
-    private BookingStatus.Status status;
+    BookingStatus.Status status;
 
     @Override
     public boolean equals(Object o) {

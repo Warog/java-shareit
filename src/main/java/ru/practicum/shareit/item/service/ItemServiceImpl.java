@@ -1,5 +1,7 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
@@ -23,12 +25,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepository itemRepository;
-    private final BookingRepository bookingRepository;
-    private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    ItemRepository itemRepository;
+    BookingRepository bookingRepository;
+    CommentRepository commentRepository;
+    UserRepository userRepository;
 
     public ItemServiceImpl(ItemRepository itemRepository, BookingRepository bookingRepository, CommentRepository commentRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;

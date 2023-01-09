@@ -1,11 +1,14 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemBookingDto {
-   private Integer id;
-   private Integer bookerId;
+   Integer id;
+   Integer bookerId;
 }
