@@ -1,9 +1,12 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.request.model.Request;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * TODO Sprint add-controllers.
@@ -24,6 +27,9 @@ public class Item {
     String description;
     Boolean available;
     Integer owner;
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "items")
+    Set<Request> requests;
 
     @Override
     public boolean equals(Object o) {

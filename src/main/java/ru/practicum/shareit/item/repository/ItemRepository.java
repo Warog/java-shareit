@@ -21,4 +21,6 @@ public interface ItemRepository {
     void deleteItem(int id);
 
     void deleteAllItems();
+
+    void addItemWithRequest(ItemDto itemDto);
 }

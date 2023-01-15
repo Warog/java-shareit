@@ -34,7 +34,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Item addItem(Integer ownerId, Item item) {
         User user = entityManager.find(User.class, ownerId);
         if (user == null)
-            throw new UserNotFoundException("Владельца с указанным Id не существует!");
+            throw new UserNotFoundException("Пользователя с указанным Id не существует!");
 
         item.setOwner(ownerId);
 
@@ -120,6 +120,13 @@ public class ItemRepositoryImpl implements ItemRepository {
         cd.from(Item.class);
 
         entityManager.createQuery(cd).executeUpdate();
+    }
+
+    public void addItemWithRequest(ItemDto itemDto) {
+        entityManager.createNativeQuery("INSERT INTO REQUEST_ITEM (request_id, item_id) VALUES ( ?,? )")
+                .setParameter(1, itemDto.getRequestId())
+                .setParameter(2, itemDto.getId())
+                .executeUpdate();
     }
 
 }
