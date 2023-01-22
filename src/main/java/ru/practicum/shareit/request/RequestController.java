@@ -1,12 +1,14 @@
 package ru.practicum.shareit.request;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.request.service.RequestServiceImpl;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping(path = "/requests")
 public class RequestController {
@@ -43,16 +46,16 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    public List<RequestDto> getRequestPage(@RequestHeader(name = "X-Sharer-User-Id") int userId, @RequestParam(name = "from", required = false) Integer from, @RequestParam(name = "size", required = false) Integer size) {
+    public List<RequestDto> getRequestPage(@RequestHeader(name = "X-Sharer-User-Id") int userId, @RequestParam(name = "from", required = false) @Min(0) Integer from, @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         log.info("Получить запросы в виде страницы [{}, {}]", from, size);
 
-        return requestService.getAllRequests(userId);
+        return requestService.getAllRequests(userId, from, size);
     }
 
     @GetMapping("/{id}")
-    public RequestDto getRequest(@PathVariable(name = "id") int id) {
+    public RequestDto getRequest(@RequestHeader(name = "X-Sharer-User-Id") int userId, @PathVariable(name = "id") int id) {
         log.info("Получить запрос по id = {}", id);
 
-        return RequestMapper.toRequestDto(requestService.getRequest(id));
+        return RequestMapper.toRequestDto(requestService.getRequest(userId, id));
     }
 }
