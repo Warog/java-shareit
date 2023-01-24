@@ -255,7 +255,8 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/exception/*</exclude>
-                                <exclude>**/*</exclude>
+                                <exclude>**/comment/*</exclude>
+<!--                                <exclude>**/*</exclude>-->
                             </excludes>
                         </configuration>
                     </plugin>
