@@ -258,7 +258,8 @@
 <!--                                <exclude>**/comment/*</exclude>-->
 <!--                                <exclude>**/booking/*</exclude>-->
 <!--                                <exclude>**/item/*</exclude>-->
-                                <exclude>**/request/*</exclude>
+<!--                                <exclude>**/request/*</exclude>-->
+                                <exclude>**/user/*</exclude>
 <!--                                <exclude>**/*</exclude>-->
                             </excludes>
                         </configuration>
