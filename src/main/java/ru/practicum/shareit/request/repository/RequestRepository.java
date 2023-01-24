@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Integer> {
     List<Request> getAllByRequestorOrderByCreatedDesc(int ownerID);
+
     List<Request> getRequestsByRequestorNot(int userId);
+
     Page<Request> getRequestsByRequestorNot(int userId, Pageable pageable);
 
 }

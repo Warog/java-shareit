@@ -117,6 +117,7 @@ public class ItemServiceIntegrationTest {
         assertEquals(itemDtoUpdate.getDescription(), itemAfterUpdate.getDescription());
         assertFalse(itemAfterUpdate.getAvailable());
     }
+
     @Test
     void searchItem() {
         List<Item> dreL = itemService.searchItem("dreL");
