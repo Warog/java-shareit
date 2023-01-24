@@ -257,7 +257,8 @@
 <!--                                <exclude>**/exception/*</exclude>-->
 <!--                                <exclude>**/comment/*</exclude>-->
 <!--                                <exclude>**/booking/*</exclude>-->
-                                <exclude>**/item/*</exclude>
+<!--                                <exclude>**/item/*</exclude>-->
+                                <exclude>**/request/*</exclude>
 <!--                                <exclude>**/*</exclude>-->
                             </excludes>
                         </configuration>
