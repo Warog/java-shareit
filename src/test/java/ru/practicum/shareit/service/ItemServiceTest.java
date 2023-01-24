@@ -1,11 +1,15 @@
 package ru.practicum.shareit.service;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -30,10 +34,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Transactional
+@SpringBootTest(
+        properties = "spring.datasource.url=jdbc:h2:file:./db/shareitTest"
+)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @ExtendWith(MockitoExtension.class)
 public class ItemServiceTest {
     ItemService itemService;
-
     @Mock
     ItemRepository itemRepository;
     @Mock
@@ -55,48 +63,6 @@ public class ItemServiceTest {
     @BeforeEach
     void setUp() {
         itemService = new ItemServiceImpl(itemRepository, bookingRepository, commentRepository, userRepository);
-    }
-
-
-    //TODO
-    @Test
-    void addItemWithOutRequestId() {
-        itemService = new ItemServiceImpl(itemRepository, bookingRepository, commentRepository, userRepository);
-
-        Mockito
-                .when(itemRepository.addItem(anyInt(), any(Item.class)))
-                .thenReturn(testItem);
-
-        ItemDto itemDto = itemService.addItem(1, ItemDto.builder()
-                .id(1)
-                .name("A")
-                .available(true)
-                .owner(1)
-                .description("B")
-                .build()
-        );
-
-    }
-
-    //TODO
-    @Test
-    void addItemWithRequestId() {
-
-
-        Mockito
-                .when(itemRepository.addItem(anyInt(), any(Item.class)))
-                .thenReturn(testItem);
-
-        ItemDto itemDto = itemService.addItem(1, ItemDto.builder()
-                .id(1)
-                .name("A")
-                .available(true)
-                .owner(1)
-                .description("B")
-                .requestId(2)
-                .build()
-        );
-
     }
 
     @Test

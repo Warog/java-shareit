@@ -1,10 +1,14 @@
 package ru.practicum.shareit.service;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.IncorrectParamInRequestException;
 import ru.practicum.shareit.exception.RequestNotFoundException;
 import ru.practicum.shareit.request.dto.RequestDto;
@@ -21,6 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.when;
 
+@Transactional
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@SpringBootTest(
+        properties = "spring.datasource.url=jdbc:h2:file:./db/shareitTest"
+)
 @ExtendWith(MockitoExtension.class)
 public class RequestServiceTest {
     RequestService requestService;
