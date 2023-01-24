@@ -254,9 +254,10 @@
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <configuration>
                             <excludes>
-                                <exclude>**/exception/*</exclude>
-                                <exclude>**/comment/*</exclude>
-                                <exclude>**/booking/*</exclude>
+<!--                                <exclude>**/exception/*</exclude>-->
+<!--                                <exclude>**/comment/*</exclude>-->
+<!--                                <exclude>**/booking/*</exclude>-->
+                                <exclude>**/item/*</exclude>
 <!--                                <exclude>**/*</exclude>-->
                             </excludes>
                         </configuration>
