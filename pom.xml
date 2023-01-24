@@ -256,6 +256,7 @@
                             <excludes>
                                 <exclude>**/exception/*</exclude>
                                 <exclude>**/comment/*</exclude>
+                                <exclude>**/booking/*</exclude>
 <!--                                <exclude>**/*</exclude>-->
                             </excludes>
                         </configuration>
