@@ -45,4 +45,9 @@ public class Request {
         return id != null && id.equals(((Request) o).getId());
     }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }
