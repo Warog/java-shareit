@@ -1,9 +1,12 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.comment.dto.CommentDto;
+
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -11,13 +14,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    private Integer id;
-    private String name;
-    private String description;
-    private Boolean available;
-    private Integer owner;
-    private Integer itemRequest;
+    Integer id;
+    String name;
+    String description;
+    Boolean available;
+    Integer owner;
+    ItemBookingDto lastBooking;
+    ItemBookingDto nextBooking;
+    List<CommentDto> comments;
 }
