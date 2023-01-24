@@ -260,7 +260,7 @@
 <!--                                <exclude>**/item/*</exclude>-->
 <!--                                <exclude>**/request/*</exclude>-->
 <!--                                <exclude>**/user/*</exclude>-->
-<!--                                <exclude>**/test/*</exclude>-->
+                                <exclude>**/test/*</exclude>
 <!--                                <exclude>**/*</exclude>-->
                             </excludes>
                         </configuration>
