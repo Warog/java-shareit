@@ -35,7 +35,7 @@ public class CommentRepositoryTest {
         assertNotNull(comments);
         assertEquals(1, comments.size());
         assertEquals(2, comments.get(0).getItemId());
-        assertEquals("Отличный шуруповерт!", comments.get(0).getText());
+        assertEquals("good shurik!", comments.get(0).getText());
 
     }
 }
