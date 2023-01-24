@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
@@ -14,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,6 +128,24 @@ public class ItemServiceIntegrationTest {
         assertNotNull(dreL);
         assertEquals(1, dreL.size());
         assertTrue(dreL.get(0).getDescription().contains("dreL".toLowerCase()));
+
+    }
+
+    @Test
+    void allOwnerItems() {
+        List<ItemDto> itemDtos = itemService.allOwnerItems(1);
+
+        assertNotNull(itemDtos);
+        assertEquals(1, itemDtos.size());
+
+    }
+
+    @Test
+    void addComment() {
+        CommentDto commentDto = itemService.addComment(2, 1, new Comment(1, "TextTEST", 1, 2, LocalDateTime.now()));
+
+        assertNotNull(commentDto);
+        assertEquals("TextTEST", commentDto.getText());
 
     }
 }

@@ -84,16 +84,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> allItems() {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Item> cr = cb.createQuery(Item.class);
-        Root<Item> root = cr.from(Item.class);
-        cr.select(root);
-
-        return entityManager.createQuery(cr).getResultList();
-    }
-
-    @Override
     public List<Item> allOwnerItems(int ownerId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Item> cr = cb.createQuery(Item.class);
@@ -103,30 +93,10 @@ public class ItemRepositoryImpl implements ItemRepository {
         return entityManager.createQuery(cr).getResultList();
     }
 
-    @Override
-    public void deleteItem(int id) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaDelete<Item> cd = cb.createCriteriaDelete(Item.class);
-        Root<Item> root = cd.from(Item.class);
-        cd.where(cb.equal(root.get("id"), id));
-
-        entityManager.createQuery(cd).executeUpdate();
-    }
-
-    @Override
-    public void deleteAllItems() {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaDelete<Item> cd = cb.createCriteriaDelete(Item.class);
-        cd.from(Item.class);
-
-        entityManager.createQuery(cd).executeUpdate();
-    }
-
     public void addItemWithRequest(ItemDto itemDto) {
         entityManager.createNativeQuery("INSERT INTO REQUEST_ITEM (request_id, item_id) VALUES ( ?,? )")
                 .setParameter(1, itemDto.getRequestId())
                 .setParameter(2, itemDto.getId())
                 .executeUpdate();
     }
-
 }

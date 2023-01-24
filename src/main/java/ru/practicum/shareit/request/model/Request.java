@@ -12,7 +12,8 @@ import java.util.Set;
  * TODO Sprint add-item-requests.
  */
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,11 +43,6 @@ public class Request {
         if (this == o) return true;
         if (!(o instanceof Request)) return false;
         return id != null && id.equals(((Request) o).getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 
 }

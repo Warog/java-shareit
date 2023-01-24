@@ -5,12 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
-
-@Data
-@RequiredArgsConstructor
+@Getter
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -20,19 +15,4 @@ public class CommentDto {
     Integer itemId;
     String authorName;
     LocalDateTime created;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CommentDto)) return false;
-        return id != null && id.equals(((CommentDto) o).getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
 }
-
-

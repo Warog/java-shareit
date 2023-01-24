@@ -132,4 +132,16 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].name", is(userDto.getName())))
                 .andExpect(jsonPath("$[0].email", is(userDto.getEmail())));
     }
+
+    @Test
+    void deleteUser() throws Exception {
+
+        mvc.perform(delete("/users/1")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1)
+                )
+                .andExpect(status().isOk());
+    }
 }

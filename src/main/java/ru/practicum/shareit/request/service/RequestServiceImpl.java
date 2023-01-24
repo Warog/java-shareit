@@ -34,7 +34,7 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     @Override
     public RequestDto addRequest(RequestDto requestDto, int userId) {
-        userService.getUser(userId); // TODO usernotfound???
+        userService.getUser(userId);
 
         if (requestDto.getDescription() == null)
             throw new IncorrectParamInRequestException("description = null");

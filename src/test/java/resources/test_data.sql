@@ -17,10 +17,10 @@ VALUES ('BUGAGA@mail.ru', 'Olen'),
        ('DUDADA@gmail.com', 'fanok'),
        ('PUPAPA@email.com', 'panok');
 
-INSERT INTO ITEMS (name, description, available, owner, request)
-VALUES ('Drel', 'drelit', true, 1, null),
-       ('Shurupowert', 'shurupit', true, 3, null),
-       ('Hammer', 'beyt', true, 4, null);
+INSERT INTO ITEMS (name, description, available, owner)
+VALUES ('Drel', 'drelit', true, 1),
+       ('Shurupowert', 'shurupit', true, 3),
+       ('Hammer', 'beyt', true, 4);
 
 INSERT INTO BOOKING (START_DATE, END_DATE, ITEM_ID, BOOKER_ID, STATUS)
 VALUES (TIMESTAMP '2021-01-01 07:15:31.123456789', TIMESTAMP '2021-01-07 07:15:31.123456789', 1, 2, 'APPROVED'),

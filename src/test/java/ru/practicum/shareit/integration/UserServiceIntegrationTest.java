@@ -14,8 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @Transactional
@@ -62,6 +61,42 @@ public class UserServiceIntegrationTest {
         assertNotNull(user);
         assertEquals(1, user.getId());
         assertEquals("Olen", user.getName());
+
+    }
+
+    @Test
+    void updateUser() {
+        UserDto userDto = UserDto.builder()
+                .id(1)
+                .name("Freya")
+                .email("fr.a@mail.com")
+                .build();
+
+        UserDto user = userService.updateUser(userDto);
+
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u Where u.email = :email", User.class);
+        User result = query.setParameter("email", user.getEmail()).getSingleResult();
+
+        assertNotNull(user);
+        assertEquals(result.getId(), user.getId());
+        assertEquals(result.getName(), user.getName());
+        assertEquals(result.getEmail(), user.getEmail());
+
+    }
+
+    @Test
+    void deleteUser() {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u Where u.id = :id", User.class);
+        User result = query.setParameter("id", 1).getSingleResult();
+
+        assertNotNull(result);
+        assertEquals(1, result.getId());
+
+        userService.deleteUser(1);
+
+        List<User> resultList = query.setParameter("id", 1).getResultList();
+
+        assertEquals(0, resultList.size());
 
     }
 

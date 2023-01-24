@@ -8,11 +8,6 @@ import ru.practicum.shareit.exception.*;
 
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse duplicateEmailException(final UserDuplicateEmailException e) {
-        return new ErrorResponse(e.getMessage());
-    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -53,12 +48,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse itemNotAvailableException(final ItemNotAvailableException e) {
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse accessDeniedException(final AccessDeniedException e) {
         return new ErrorResponse(e.getMessage());
     }
 
