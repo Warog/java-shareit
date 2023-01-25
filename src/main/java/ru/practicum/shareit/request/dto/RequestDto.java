@@ -18,5 +18,5 @@ public class RequestDto {
     Integer id;
     String description;
     LocalDateTime created;
-    Set<ItemRequest> items;
+    Set<ItemRequestDto> items;
 }

@@ -1,5 +1,7 @@
 package ru.practicum.shareit.request;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,10 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping(path = "/requests")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RequestController {
 
-    private final RequestService requestService;
+    RequestService requestService;
 
     public RequestController(RequestServiceImpl requestServiceImpl) {
         this.requestService = requestServiceImpl;

@@ -1,7 +1,7 @@
 package ru.practicum.shareit.request.mapper;
 
 import lombok.Setter;
-import ru.practicum.shareit.request.dto.ItemRequest;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 
@@ -18,7 +18,7 @@ public class RequestMapper {
                     .created(request.getCreated())
                     .items(
                             request.getItems().stream()
-                                    .map(item -> new ItemRequest(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), request.getId(), item.getOwner()))
+                                    .map(item -> new ItemRequestDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), request.getId(), item.getOwner()))
                                     .collect(Collectors.toSet()))
                     .build();
 

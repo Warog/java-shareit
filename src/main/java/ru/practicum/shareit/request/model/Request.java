@@ -24,17 +24,14 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    // ткст запроса, содержащий описание требуемой вещи
     String description;
-    // пользователь, создавший запрос
     Integer requestor;
-    // дата и время создания запроса
     LocalDateTime created;
 
     @ManyToMany
     @JoinTable(name = "request_item",
-        joinColumns = @JoinColumn(name = "request_id"),
-            inverseJoinColumns =  @JoinColumn(name = "item_id")
+            joinColumns = @JoinColumn(name = "request_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     Set<Item> items;
 

@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.RequestController;
-import ru.practicum.shareit.request.dto.ItemRequest;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.service.RequestServiceImpl;
@@ -59,7 +59,7 @@ public class RequestControllerTest {
                 .description("Thor")
                 .created(LocalDateTime.now())
                 .items(
-                        Set.of(new ItemRequest(1, "Hammer", "Oo", true, 2, 1))
+                        Set.of(new ItemRequestDto(1, "Hammer", "Oo", true, 2, 1))
                 )
                 .build();
 
