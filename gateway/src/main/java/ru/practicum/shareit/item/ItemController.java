@@ -35,13 +35,13 @@ public class ItemController {
     public ResponseEntity<Object> addItem(@Positive @RequestHeader("X-Sharer-User-Id") long userId,
                                           @Valid @RequestBody ItemDto item) {
         log.info("create item item={}, userId={}", item, userId);
-        if(item.getAvailable() == null) {
+        if (item.getAvailable() == null) {
             throw new IncorrectParamInRequestException("Не указан параметр 'Available'");
         }
-        if(item.getName().isBlank()) {
+        if (item.getName().isBlank()) {
             throw new IncorrectParamInRequestException("Неверно указан параметр 'Name'");
         }
-        if(item.getDescription() == null) {
+        if (item.getDescription() == null) {
             throw new IncorrectParamInRequestException("Неверно указан параметр 'Description'");
         }
 
