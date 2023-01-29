@@ -15,9 +15,7 @@ import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ public class RequestServiceImpl implements RequestService {
 
         Request request = RequestMapper.toRequest(requestDto);
         request.setRequestor(userId);
-        request.setCreated(ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime());
+        request.setCreated(LocalDateTime.now());
 
         return RequestMapper.toRequestDto(requestRepository.save(request));
 

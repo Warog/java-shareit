@@ -19,9 +19,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -120,15 +118,16 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public CommentDto addComment(int authorId, int itemId, Comment comment) {
-        ZonedDateTime nowDate = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03")));
-        List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndStatusAndEndBefore(itemId, authorId, BookingStatus.Status.APPROVED, nowDate.toLocalDateTime());
+//        ZonedDateTime nowDate = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03")));
+        LocalDateTime nowDate = LocalDateTime.now(); // локально показывает не системное время(вместо +3, показывает 0)
+        List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndStatusAndEndBefore(itemId, authorId, BookingStatus.Status.APPROVED, nowDate);
 
         if (bookings.size() == 0)
             throw new CommentDeniedException("Комментарий отклонен!");
 
         comment.setItemId(itemId);
         comment.setAuthorId(authorId);
-        comment.setCreated(nowDate.toLocalDateTime());
+        comment.setCreated(nowDate);
 
         return CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getUser(authorId));
     }

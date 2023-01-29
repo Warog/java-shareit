@@ -23,9 +23,6 @@ import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -61,7 +58,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public BookingDto addBooking(Booking booking) {
-        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime();
+//        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
         ItemDto item = itemService.getItem(booking.getItemId(), null);
 
         if (userService.getUser(booking.getBookerId()) == null)
@@ -95,8 +93,8 @@ public class BookingServiceImpl implements BookingService {
             pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "end"));
         }
 
-        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime();
-
+//        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
         switch (state.toLowerCase()) {
             case "current":
                 return bookingRepository.getByBookerIdAndEndIsAfterAndStartBeforeOrderByStartDesc(bookerId, currentTime, currentTime, pageable)
@@ -147,8 +145,8 @@ public class BookingServiceImpl implements BookingService {
         } else {
             pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "end"));
         }
-        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime();
-
+//        LocalDateTime currentTime = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03"))).toLocalDateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
         List<ItemDto> itemList = itemService.allOwnerItems(userId);
         List<Booking> bookingList = new ArrayList<>();
 
