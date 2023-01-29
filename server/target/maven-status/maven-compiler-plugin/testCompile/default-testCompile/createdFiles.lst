@@ -1,0 +1,17 @@
+ru\practicum\shareit\json\UserDtoJsonTest.class
+ru\practicum\shareit\repository\RequestRepositoryTest.class
+ru\practicum\shareit\ShareItTests.class
+ru\practicum\shareit\repository\CommentRepositoryTest.class
+ru\practicum\shareit\service\ItemServiceTest.class
+ru\practicum\shareit\controller\RequestControllerTest.class
+ru\practicum\shareit\repository\UserRepositoryTest.class
+ru\practicum\shareit\controller\UserControllerTest.class
+ru\practicum\shareit\json\ItemDtoJsonTest.class
+ru\practicum\shareit\service\RequestServiceTest.class
+ru\practicum\shareit\integration\ItemServiceIntegrationTest.class
+ru\practicum\shareit\repository\BookingRepositoryTest.class
+ru\practicum\shareit\controller\BookingControllerTest.class
+ru\practicum\shareit\repository\ItemRepositoryTest.class
+ru\practicum\shareit\service\BookingServiceTest.class
+ru\practicum\shareit\controller\ItemControllerTest.class
+ru\practicum\shareit\integration\UserServiceIntegrationTest.class
