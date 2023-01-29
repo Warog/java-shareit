@@ -13,13 +13,4 @@ public class CommentMapper {
                 .created(comment.getCreated())
                 .build();
     }
-
-    public static Comment toComment(CommentDto commentDto, User user) {
-        return Comment.builder()
-                .id(commentDto.getId())
-                .text(commentDto.getText())
-                .authorId(user.getId())
-                .created(commentDto.getCreated())
-                .build();
-    }
 }

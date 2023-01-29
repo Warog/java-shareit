@@ -10,9 +10,9 @@ public interface BookingService {
 
     BookingDto addBooking(Booking booking);
 
-    List<BookingDto> allBookings(int userid, String state);
+    List<BookingDto> allBookings(int userid, String state, Integer from, Integer size);
 
-    List<BookingDto> allOwnerBookings(int userId, String state);
+    List<BookingDto> allOwnerBookings(int userId, String state, Integer from, Integer size);
 
     BookingDto approveBooking(int userId, int bookingId, boolean isApproved);
 

@@ -14,11 +14,7 @@ public interface ItemRepository {
 
     List<Item> searchItem(String description);
 
-    List<Item> allItems();
-
     List<Item> allOwnerItems(int ownerId);
 
-    void deleteItem(int id);
-
-    void deleteAllItems();
+    void addItemWithRequest(ItemDto itemDto);
 }

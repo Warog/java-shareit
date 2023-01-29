@@ -1,18 +1,21 @@
 package ru.practicum.shareit.booking;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 /**
  * TODO Sprint add-bookings.
  */
 
+@Validated
 @Slf4j
 @RestController
 @RequestMapping(path = "/bookings")
@@ -49,17 +52,17 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam(defaultValue = "all") String state) {
+    public List<BookingDto> getBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam(defaultValue = "all") String state, @RequestParam(name = "from", required = false) @Min(0) Integer from, @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         log.info("Поучить все заявки пользователя = {}", userId);
 
-        return bookingService.allBookings(userId, state);
+        return bookingService.allBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam(defaultValue = "all") String state) {
+    public List<BookingDto> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") int userId, @RequestParam(defaultValue = "all") String state, @RequestParam(name = "from", required = false) @Min(0) Integer from, @RequestParam(name = "size", required = false) @Min(1) Integer size) {
         log.info("Поучить все заявки на предметы владельца ID = {}", userId);
 
-        return bookingService.allOwnerBookings(userId, state);
+        return bookingService.allOwnerBookings(userId, state, from, size);
 
     }
 }

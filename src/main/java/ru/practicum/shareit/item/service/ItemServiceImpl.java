@@ -84,7 +84,14 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto addItem(Integer ownerId, ItemDto itemDto) {
-        return ItemMapper.toItemDto(itemRepository.addItem(ownerId, ItemMapper.toItem(itemDto)));
+        ItemDto addedItem = ItemMapper.toItemDto(itemRepository.addItem(ownerId, ItemMapper.toItem(itemDto)));
+        addedItem.setRequestId(itemDto.getRequestId());
+
+        if (itemDto.getRequestId() != null) {
+            itemRepository.addItemWithRequest(addedItem);
+        }
+
+        return addedItem;
     }
 
     @Transactional

@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,15 +81,22 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public List<BookingDto> allBookings(int bookerId, String state) {
+    public List<BookingDto> allBookings(int bookerId, String state, Integer from, Integer size) {
+        Pageable pageable;
+
         if (userService.getUser(bookerId) == null)
             throw new UserNotFoundException(String.format("Пользователя с таким ID = %d не существует!", bookerId));
+        if (from == null || size == null) {
+            pageable = Pageable.unpaged();
+        } else {
+            pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "end"));
+        }
 
         LocalDateTime currentTime = LocalDateTime.now();
 
         switch (state.toLowerCase()) {
             case "current":
-                return bookingRepository.findByBookerIdAndEndIsAfterAndStartIsBeforeOrderByStartDesc(bookerId, currentTime, currentTime)
+                return bookingRepository.getByBookerIdAndEndIsAfterAndStartIsBeforeOrderByStartDesc(bookerId, currentTime, currentTime, pageable)
                         .stream()
                         .map(booking -> BookingMapper.toBookingDto(booking, itemService.getItem(booking.getItemId(), null)))
                         .collect(Collectors.toList());
@@ -112,9 +121,11 @@ public class BookingServiceImpl implements BookingService {
                         .map(booking -> BookingMapper.toBookingDto(booking, itemService.getItem(booking.getItemId(), null)))
                         .collect(Collectors.toList());
             case "all":
-                return bookingRepository.findAllByBookerIdOrderByEndDesc(bookerId)
+                List<Booking> allByBookerId = bookingRepository.findAll(pageable).toList();
+                return allByBookerId
                         .stream()
                         .map(booking -> BookingMapper.toBookingDto(booking, itemService.getItem(booking.getItemId(), null)))
+                        .sorted(Comparator.comparing(BookingDto::getStart).reversed())
                         .collect(Collectors.toList());
             default:
                 throw new IncorrectParamInRequestException("Unknown state: UNSUPPORTED_STATUS");
@@ -123,17 +134,23 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public List<BookingDto> allOwnerBookings(int userId, String state) {
+    public List<BookingDto> allOwnerBookings(int userId, String state, Integer from, Integer size) {
+        Pageable pageable;
+
         if (userService.getUser(userId) == null)
             throw new UserNotFoundException(String.format("Пользователя с таким ID = %d не существует!", userId));
-
+        if (from == null || size == null) {
+            pageable = Pageable.unpaged();
+        } else {
+            pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "end"));
+        }
         LocalDateTime currentTime = LocalDateTime.now();
 
         List<ItemDto> itemList = itemService.allOwnerItems(userId);
         List<Booking> bookingList = new ArrayList<>();
 
         for (ItemDto item : itemList) {
-            bookingList.addAll(bookingRepository.findAllByItemId(item.getId()));
+            bookingList.addAll(bookingRepository.findAllByItemId(item.getId(), pageable).toList());
         }
 
         switch (state.toLowerCase()) {
