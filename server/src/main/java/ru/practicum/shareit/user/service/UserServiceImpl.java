@@ -28,9 +28,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(User user) {
         User updatedUser = userRepository.getById(user.getId());
-        if(user.getName() != null)
+        if (user.getName() != null)
             updatedUser.setName(user.getName());
-        if(user.getEmail() != null)
+        if (user.getEmail() != null)
             updatedUser.setEmail(user.getEmail());
 
         return UserMapper.toUserDto(userRepository.save(updatedUser));
