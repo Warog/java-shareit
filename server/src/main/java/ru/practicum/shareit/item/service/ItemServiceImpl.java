@@ -12,6 +12,9 @@ import ru.practicum.shareit.comment.mapper.CommentMapper;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.comment.repository.CommentRepository;
 import ru.practicum.shareit.exception.CommentDeniedException;
+import ru.practicum.shareit.exception.ItemNotFoundException;
+import ru.practicum.shareit.exception.UserNotFoundException;
+import ru.practicum.shareit.exception.UserNotOwnerException;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -43,7 +46,12 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto getItem(int id, Integer userId) {
-        Item item = itemRepository.getItem(id);
+        if (itemRepository.countItemById(id) < 1)
+            throw new ItemNotFoundException(String.format("Предмет ID=%d не найден", id));
+        if (userRepository.countUserById(userId) < 1)
+            throw new UserNotFoundException("Пользователя с указанным Id не существует!");
+
+        Item item = itemRepository.getById(id);
         List<Comment> comments = commentRepository.findCommentsByItemId(id);
 
         Optional<ItemBookingDto> lastBooking = Optional.empty();
@@ -71,10 +79,10 @@ public class ItemServiceImpl implements ItemService {
         }
 
         List<CommentDto> commentDtos = comments.stream()
-                .map(comment -> CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getUser(comment.getAuthorId())))
+                .map(comment -> CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getById(comment.getAuthorId())))
                 .collect(Collectors.toList());
 
-        return ItemMapper.toItemDtoWithBookings(itemRepository.getItem(id),
+        return ItemMapper.toItemDtoWithBookings(itemRepository.getById(id),
                 lastBooking.orElse(null),
                 nextBooking.orElse(null),
                 commentDtos
@@ -84,11 +92,16 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto addItem(Integer ownerId, ItemDto itemDto) {
-        ItemDto addedItem = ItemMapper.toItemDto(itemRepository.addItem(ownerId, ItemMapper.toItem(itemDto)));
+        if (userRepository.countUserById(ownerId) < 1)
+            throw new UserNotFoundException("Пользователя с указанным Id не существует!");
+
+        itemDto.setOwner(ownerId);
+        ItemDto addedItem = ItemMapper.toItemDto(itemRepository.save(ItemMapper.toItem(itemDto)));
+
         addedItem.setRequestId(itemDto.getRequestId());
 
         if (itemDto.getRequestId() != null) {
-            itemRepository.addItemWithRequest(addedItem);
+            itemRepository.addItemWithRequest(itemDto.getRequestId(), addedItem.getId());
         }
 
         return addedItem;
@@ -97,19 +110,31 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto updateItem(Integer ownerId, ItemDto itemDto) {
-        return ItemMapper.toItemDto(itemRepository.updateItem(ownerId, itemDto));
+        Item updatedItem = itemRepository.getById(itemDto.getId());
+
+        if (!updatedItem.getOwner().equals(ownerId))
+            throw new UserNotOwnerException("Пользователь не является владельцем!");
+
+        if (itemDto.getName() != null)
+            updatedItem.setName(itemDto.getName());
+        if (itemDto.getDescription() != null)
+            updatedItem.setDescription(itemDto.getDescription());
+        if (itemDto.getAvailable() != null)
+            updatedItem.setAvailable(itemDto.getAvailable());
+
+        return ItemMapper.toItemDto(itemRepository.save(updatedItem));
     }
 
     @Transactional
     @Override
     public List<Item> searchItem(String description) {
-        return itemRepository.searchItem(description);
+        return itemRepository.searchAllByDescriptionContainingIgnoreCaseAndAvailableTrue(description);
     }
 
     @Transactional
     @Override
     public List<ItemDto> allOwnerItems(int ownerId) {
-        List<Item> items = itemRepository.allOwnerItems(ownerId);
+        List<Item> items = itemRepository.findAllByOwnerOrderByIdAsc(ownerId);
 
         return items.stream()
                 .map(item -> getItem(item.getId(), ownerId)).collect(Collectors.toList());
@@ -118,8 +143,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public CommentDto addComment(int authorId, int itemId, Comment comment) {
-//        ZonedDateTime nowDate = ZonedDateTime.now(ZoneId.ofOffset("UTC", ZoneOffset.of("+03")));
-        LocalDateTime nowDate = LocalDateTime.now(); // локально показывает не системное время(вместо +3, показывает 0)
+        LocalDateTime nowDate = LocalDateTime.now();
         List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndStatusAndEndBefore(itemId, authorId, BookingStatus.Status.APPROVED, nowDate);
 
         if (bookings.size() == 0)
@@ -129,6 +153,6 @@ public class ItemServiceImpl implements ItemService {
         comment.setAuthorId(authorId);
         comment.setCreated(nowDate);
 
-        return CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getUser(authorId));
+        return CommentMapper.toCommentDto(commentRepository.save(comment), userRepository.getById(authorId));
     }
 }

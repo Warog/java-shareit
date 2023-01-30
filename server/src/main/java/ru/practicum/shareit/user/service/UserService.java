@@ -10,7 +10,7 @@ public interface UserService {
 
     UserDto addUser(User user);
 
-    UserDto updateUser(UserDto userDto);
+    UserDto updateUser(User user);
 
     List<User> allUsers();
 

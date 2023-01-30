@@ -1,20 +1,23 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.item.dto.ItemDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
 
-public interface ItemRepository {
-    Item getItem(int id);
+public interface ItemRepository extends JpaRepository<Item, Integer> {
 
-    Item addItem(Integer ownerId, Item item);
+    long countItemById(int id);
 
-    Item updateItem(Integer ownerId, ItemDto itemDto);
+    List<Item> searchAllByDescriptionContainingIgnoreCaseAndAvailableTrue(String description);
 
-    List<Item> searchItem(String description);
+    List<Item> findAllByOwnerOrderByIdAsc(int ownerId);
 
-    List<Item> allOwnerItems(int ownerId);
-
-    void addItemWithRequest(ItemDto itemDto);
+    @Modifying
+    @Query(value = "INSERT INTO REQUEST_ITEM (request_id, item_id) VALUES ( :request_id, :item_id)",
+            nativeQuery = true)
+    void addItemWithRequest(@Param("request_id") Integer requestId, @Param("item_id") Integer itemId);
 }

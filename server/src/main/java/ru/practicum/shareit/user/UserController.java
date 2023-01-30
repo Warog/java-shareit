@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -39,7 +40,7 @@ public class UserController {
         userDto.setId(id);
         log.info("Обновить пользователя. Данные: {}", userDto);
 
-        return userService.updateUser(userDto);
+        return userService.updateUser(UserMapper.toUser(userDto));
     }
 
     @GetMapping
